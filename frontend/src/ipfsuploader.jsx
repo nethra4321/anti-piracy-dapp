@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { BrowserProvider, Contract } from "ethers";
 import abi from "./PiracyGuardABI.json";
-
+import axios from "axios";
 
 const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const JWT = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4ZTkzMTVhMS02NjJkLTRkODAtYmQ0ZC03NzQ2Y2ZjMDE4ZGEiLCJlbWFpbCI6Im5ldGhyYWphbmE3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJiZTkxZTA5ZjExNWQ5Y2U0MTVlZCIsInNjb3BlZEtleVNlY3JldCI6IjIxM2EyMjI0ZDgzZWJjZDM1OGE1ODU3NTk3OWM5MTEyNjRkYzY3MTVkYThmMjY2MWMyZDI4ZTRmNzY0OTBmOGIiLCJleHAiOjE3NzY0MDUzODh9.c4bZ7afGAq4M01r6RmLjPholV27J47NrBTIBzVop-Cc";
 
 //developing metamask 
 export default function IPFSUploader() {
@@ -30,13 +31,44 @@ export default function IPFSUploader() {
       if (Number(network.chainId) !== 31337) return;
   
       setWallet(accounts[0]);
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000);
+    //   setShowPopup(true);
+    //   setTimeout(() => setShowPopup(false), 3000);
     } catch (err) {
       console.error(err);
     }
   };
   
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const uploadToIPFS = async () => {
+    if (!file) return alert("Choose a file first");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+        maxBodyLength: "Infinity",
+        headers: {
+          Authorization: JWT,
+        },
+      });
+
+      const cid = res.data.IpfsHash;
+      setIpfsCid(cid);
+      alert("File uploaded to IPFS");
+    } catch (err) {
+      if (err.response) {
+        console.error("Pinata Upload Error:", err.response.data);
+      } else {
+        console.error("Pinata Upload Error:", err.message);
+      }
+      alert("Upload failed. Check console for details.");
+    }
+  };
+
 
   return (
     <div style={{

@@ -68,7 +68,28 @@ export default function IPFSUploader() {
       alert("Upload failed. Check console for details.");
     }
   };
-
+  const registerContent = async () => {
+    if (!ipfsCid) {
+      alert("Upload a file to IPFS first.");
+      return;
+    }
+  
+    try {
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new Contract(CONTRACT_ADDRESS, abi, signer);
+  
+      const tx = await contract.registerContent(ipfsCid);
+      await tx.wait();
+  
+      setTxHash(tx.hash);
+      alert("Content registered on blockchain");
+      console.log("Transaction hash:", tx.hash);
+    } catch (err) {
+      console.error("Smart contract registration error:", err);
+      alert("Failed to register content on blockchain.");
+    }
+  };
 
   return (
     <div style={{
@@ -110,7 +131,7 @@ export default function IPFSUploader() {
         <div style={{ marginTop: "1rem" }}>
           <p><strong>IPFS CID:</strong> {ipfsCid}</p>
           <p>
-            <a href={`https://ipfs.io/ipfs/${ipfsCid}`} target="_blank" rel="noopener noreferrer" style={{ color: "#93c5fd" }}>
+            <a href={`https://gateway.pinata.cloud/ipfs/${ipfsCid}`} target="_blank" rel="noopener noreferrer" style={{ color: "#93c5fd" }}>
               View on IPFS
             </a>
           </p>

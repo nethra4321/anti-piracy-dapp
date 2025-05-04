@@ -73,7 +73,6 @@ function runPowWorker(wallet, infoHash, index, dht,cid,filename) {
         let nonce = 0;
         while (true) {
           const preimage = buildPreimage(infoHash, wallet, nonce);
-          console.log("Testing hash: " + crypto.createHash("sha256").update(preimage).digest("hex") + " for nonce: " + nonce);
           const bits = sha256Bits(preimage);
 
           let zeroBits = 0;
@@ -83,6 +82,10 @@ function runPowWorker(wallet, infoHash, index, dht,cid,filename) {
           }
 
           if (zeroBits >= difficulty) {
+            const hashHex = crypto.createHash("sha256").update(preimage).digest("hex");
+            console.log('PoW solved!');
+            console.log("Found nonce:", nonce);
+            console.log("Corresponding hash:", hashHex);
             parentPort.postMessage({ nonce });
             return;
           }
@@ -90,6 +93,7 @@ function runPowWorker(wallet, infoHash, index, dht,cid,filename) {
           nonce++;
           if (nonce % 100000 === 0 && workerData.globalStop) return;
         }
+        
       }
 
       findNonce(workerData.infoHash, workerData.wallet, workerData.difficulty);
@@ -114,7 +118,6 @@ function runPowWorker(wallet, infoHash, index, dht,cid,filename) {
         const actualInfoHash = crypto.createHash("sha256").update(preimageBuffer).digest("hex");
         const paddedInfoHash = padToBytes32(actualInfoHash);
 
-        console.log(`[Wallet ${index}] PoW solved!`);
         // console.log(`[Wallet ${index}] Preimage hex: ${preimageHex}`);
 
 

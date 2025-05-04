@@ -104,7 +104,7 @@ export default function IPFSUploader() {
         filename: file.name,
       });
       console.log("Backend response:", res.data);
-      alert(`Seeding started..\nInfoHash: ${res.data.infoHash}`);
+      console.log(`Seeding started..\nInfoHash: ${res.data.infoHash}`);
     } catch (err) {
       console.error("Backend Seed Error:", err.response?.data || err.message);
       alert("Failed to send CID to backend.");

@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+// Reads who registered the content (by CID) from the PiracyGuard contract. Used to verify that a CID is officially registered.
 interface IPiracyGuard {
     function contentCreators(string calldata cid) external view returns (address);
 }
-
+// Calls the reward distribution logic from the RewardZKP contract.
 interface IRewardZKP {
     function reward(address payable winner, bytes32 infoHash) external;
 }

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
-
+//Registers content creators and their IPFS CIDs.
 contract PiracyGuard {
     mapping(string => address) public contentCreators;
     event ContentRegistered(string ipfsCid, address indexed creator);

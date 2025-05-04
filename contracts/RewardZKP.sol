@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+// RewardZKP contract that distributes rewards to users who report piracy after cid verification from Piracy coordinator contract.
 contract RewardZKP {
     address public owner;
     uint256 public rewardAmount;

@@ -13,17 +13,20 @@ import PiracyCoordinatorAbi from "./abis/piracyCoordinator.json" assert { type: 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Load deployed PiracyCoordinator contract address
 const { coordinator: coordAddress } = JSON.parse(
   fs.readFileSync(path.join(__dirname, "..", "scripts", "coordinator-address.json"), "utf8")
 );
-
+// Set up Ethers provider and signer with private key for sending transactions
 const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
 const PRIVATE_KEY = "0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61";
 const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
+// Load scanning wallets from JSON file
 const wallets = JSON.parse(fs.readFileSync("./wallets.json", "utf8"));
 let globalStop = false;
 
+// Starts the scanner on all wallets for the given torrent infohash, IPFS CID and filename
 export function startScanner(infoHash,cid,filename) {
   wallets.forEach((walletInfo, index) => {
     const wallet = walletInfo.wallet;
@@ -32,13 +35,13 @@ export function startScanner(infoHash,cid,filename) {
 
     dht.listen(port, () => {
       console.log(`[Wallet ${index}] DHT listening on port ${port}`);
-      dht.lookup(infoHash);
+      dht.lookup(infoHash); // This searches for peers matching this infoHash
     });
 
     runPowWorker(wallet, infoHash, index, dht,cid,filename);
   });
 }
-
+ // Worker logic to find a nonce that produces a SHA-256 hash with required leading zeros
 function runPowWorker(wallet, infoHash, index, dht,cid,filename) {
   let alreadyWorking = false;
   const difficulty = 5;
@@ -123,13 +126,14 @@ function runPowWorker(wallet, infoHash, index, dht,cid,filename) {
 
         try {
           const input = { preimage: preimageBits };
-
+          // Generate proof using snarkjs and Groth16 proving system
           const { proof, publicSignals } = await groth16.fullProve(
             input,
             "../circuits/powproof_js/powproof.wasm",
             "../circuits/powproof_final.zkey"
           );
           console.log(`[Wallet ${index}] Proof generated`);
+          //verifying the proof
           const vKey = JSON.parse(fs.readFileSync("../circuits/verification_key.json", "utf8"));
           const verified = await groth16.verify(vKey, publicSignals, proof);
           console.log("Local Verification:", verified);

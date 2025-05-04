@@ -32,7 +32,7 @@ const rewardZKP = new ethers.Contract(REWARDZKP_ADDRESS, RewardZKPAbi, signer);
 app.use(cors());
 app.use(express.json());
 
-// Seed endpoint
+// Seed endpoint for seeding the file via web torrent and starts the Scanner
 app.post("/api/seed", async (req, res) => {
   const { cid ,filename} = req.body;
  console.log("file_name",filename)
@@ -75,7 +75,7 @@ if (!fs.existsSync(LOG_FILE)) {
   fs.writeFileSync(LOG_FILE, "[]");
 }
 
-//report endpoint
+//report endpoint for sending the report to the report-log json file for report dashboard
 app.post("/api/report", (req, res) => {
   try {
     const { cid, infoHash, scanner,filename } = req.body;

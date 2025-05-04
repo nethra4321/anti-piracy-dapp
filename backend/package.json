@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "dev": "node seed-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "name": "backend",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "seed-server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "keccak": "^3.0.4",
+    "snarkjs": "^0.7.5",
+    "webtorrent": "^2.6.3"
+  }
+}

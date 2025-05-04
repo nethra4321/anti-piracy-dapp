@@ -1,14 +1,19 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { BrowserProvider, Contract } from "ethers";
 import abi from "./PiracyGuardABI.json";
 import axios from "axios";
 
+
 const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 const JWT = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4ZTkzMTVhMS02NjJkLTRkODAtYmQ0ZC03NzQ2Y2ZjMDE4ZGEiLCJlbWFpbCI6Im5ldGhyYWphbmE3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6IkZSQTEifSx7ImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxLCJpZCI6Ik5ZQzEifV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJiZTkxZTA5ZjExNWQ5Y2U0MTVlZCIsInNjb3BlZEtleVNlY3JldCI6IjIxM2EyMjI0ZDgzZWJjZDM1OGE1ODU3NTk3OWM5MTEyNjRkYzY3MTVkYThmMjY2MWMyZDI4ZTRmNzY0OTBmOGIiLCJleHAiOjE3NzY0MDUzODh9.c4bZ7afGAq4M01r6RmLjPholV27J47NrBTIBzVop-Cc";
 
+
 //developing metamask 
 export default function IPFSUploader() {
+  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const [ipfsCid, setIpfsCid] = useState("");
   const [wallet, setWallet] = useState("Not connected");
@@ -85,11 +90,27 @@ export default function IPFSUploader() {
       setTxHash(tx.hash);
       alert("Content registered on blockchain");
       console.log("Transaction hash:", tx.hash);
+      await sendToBackend();
     } catch (err) {
       console.error("Smart contract registration error:", err);
       alert("Failed to register content on blockchain.");
     }
   };
+  const sendToBackend = async () => {
+    try {
+      console.log(file.name, ipfsCid)
+      const res = await axios.post("http://localhost:5005/api/seed", {
+        cid: ipfsCid,
+        filename: file.name,
+      });
+      console.log("Backend response:", res.data);
+      alert(`Seeding started..\nInfoHash: ${res.data.infoHash}`);
+    } catch (err) {
+      console.error("Backend Seed Error:", err.response?.data || err.message);
+      alert("Failed to send CID to backend.");
+    }
+  };
+  
 
   return (
     <div style={{
@@ -105,6 +126,21 @@ export default function IPFSUploader() {
       <h1 style={{ textAlign: "center", fontSize: "2rem", marginBottom: "1rem" }}>
         Decentralized Anti-Piracy System
       </h1>
+      <button
+      onClick={() => navigate("/dashboard")}
+      style={{
+       padding: "10px 20px",
+       backgroundColor: "#4ade80",
+       color: "white",
+       border: "none",
+       borderRadius: "8px",
+       cursor: "pointer",
+       marginLeft: "10px",
+      marginBottom: "10px"
+    }}
+    >
+     View Dashboard
+   </button>
 
       <h2 style={{ marginBottom: "1rem" }}>Upload and Register File</h2>
 

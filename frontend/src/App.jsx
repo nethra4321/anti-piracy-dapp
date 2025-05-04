@@ -1,5 +1,5 @@
 import React from "react";
-import IPFSUploader from "./ipfsuploader";
+// import IPFSUploader from "./ipfsuploader";
 
 function App() {
   return (

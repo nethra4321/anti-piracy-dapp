@@ -94,7 +94,10 @@ function runPowWorker(wallet, infoHash, index, dht,cid,filename) {
           }
 
           nonce++;
-          if (nonce % 100000 === 0 && workerData.globalStop) return;
+          if (nonce % 100000 === 0 && workerData.globalStop){
+           globalStop = true;
+           return;
+          } 
         }
         
       }

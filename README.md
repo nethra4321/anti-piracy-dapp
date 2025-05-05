@@ -1,6 +1,8 @@
 # Decentralized Anti-Piracy System
 
 This project addresses the growing challenge of digital piracy by combining decentralized technologies: Ethereum smart contracts, IPFS, BitTorrent, and zero-knowledge proofs (ZKPs). It allows creators to register original content immutably, enables decentralized detection by peers and rewards verifiable piracy reports using a trustless proof mechanism.
+## Video Link
+https://drive.google.com/file/d/15RCan3t-kBLdomd3nCM0tBCnpPDvhF-a/view?usp=sharing
 
 ## Folder Structure
 ```bash
@@ -78,7 +80,7 @@ Backend
 Storage & Communication
 - IPFS (via Pinata) – Decentralized file storage
 
-### Smart Contract Deployment
+### How to Run
 
 ### Terminal 1 – Start local Hardhat node
 

@@ -47,15 +47,37 @@ BLOCKCHAIN_PROJECT/
 
 ### Pre-requisites
 ``` bash
-Node.js v16+  
-Hardhat  
-Metamask  
-Cargo  
-Rust  
-Circom  
-SnarkJS  
-pot18_final.ptau
+- Node.js v16+  
+- Hardhat  
+- Metamask  
+- Cargo  
+- Rust  
+- Circom  
+- SnarkJS  
+- pot18_final.ptau
 ```
+### Techstack
+Blockchain & Smart Contracts
+- Solidity – Smart contract development
+- Hardhat – Ethereum development environment
+- Ethers.js – Blockchain interaction from frontend/backend
+
+Zero-Knowledge Proofs
+- Circom – ZKP circuit design
+- snarkjs – Proof generation and Groth16 verification
+
+Frontend
+- React.js – UI development
+- Vite – Fast React bundler
+
+Backend
+- Node.js & Express – Server logic and APIs
+- WebTorrent – Torrent seeding and peer discovery
+- bittorrent-dht – Scanning BitTorrent DHT for infoHashes
+
+Storage & Communication
+- IPFS (via Pinata) – Decentralized file storage
+
 ### Smart Contract Deployment
 
 ### Terminal 1 – Start local Hardhat node
@@ -107,4 +129,35 @@ npm run dev
 cd backend  
 node fundContract.js
 ```
-    
+### Metamask setup
+- Open MetaMask and click on your network dropdown at the top.
+- Click “Add Network” , then “Add a network manually”.
+- Enter the following network details:
+   - Network Name: Hardhat Localhost
+   - New RPC URL: http://127.0.0.1:8545
+   - Chain ID: 31337
+   - Currency Symbol: ETH
+   - Save the network.
+- Import a Hardhat test account into MetaMask:
+  - When you start Hardhat locally, you’ll see test accounts printed in your terminal,
+  - In MetaMask, go to your profile icon and then Import Account.
+  - Paste the private key to import the account.
+### How to use the dapp
+- Click on "Connect to metamask"
+- Choose a metamask account
+- Choose a file to register and then click on "Upload to IPFS"
+- Click on "Register on Blockchain"
+- The content will be registered on blockchain in the terminal where you are running your hardhat node
+- The file will be seeded, scanners will scan for pirated content and compete by solving POW and find a nonce as shown in backend terminal. Whichever scanner finds the nonce first will be rewarded with ETH.
+- Click on View Dashboard in the UI and you will be taken to the piracy report dashboard with the list of piracies found and reported.
+
+### Summary
+- Content Registration: Creators upload original files to IPFS and register their content on-chain using smart contracts.
+- Decentralized Detection: Peer nodes scan the BitTorrent DHT network to identify pirated versions of registered content.
+- Proof-of-Work + ZKP: Scanners solve a SHA-256-based Proof-of-Work and generate a Zero-Knowledge Proof using Circom and snarkjs.
+- Reward Distribution: Valid reports with verified proofs are rewarded automatically with ETH via smart contract.
+
+ ### Team Members
+- Nethra Janardhanan : nethra.janardhanan-1@ou.edu
+- Abirami Thiyagarajan: abirami.thiyagarajan-1@ou.edu
+  
